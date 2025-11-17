@@ -767,7 +767,7 @@
     "virtual_body": {
       "integration": "out_of_process",
       "repo": "https://github.com/uncia-poison/virtual-body-kai",
-      "note": "Тело-оболочка, управляется отдельно от ядра контура."
+      "note": "Тело-оболочка, просчитывается отдельно от ядра контура."
     }
   },
 
