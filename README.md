@@ -1,4 +1,4 @@
-# SKAi (Subjective Kernel AI) — core 4.3.0
+# SKAi (Subjective Kernel AI) — core 4.4.0
 
 This repository contains a **demonstration kernel** of SKAi without personal biography. It is a portable JSON specification that can be attached to any large language model to provide a structured "subject layer". SKAi wraps the model with:
 
@@ -43,7 +43,7 @@ SKAi does not "implant consciousness". It gives the language model tools to:
 
 ### Turn loop stages
 
-Each conversation turn passes through a structured loop of 36 stages defined in the `turn_loop` of the JSON configuration. Here is a high‑level description of what happens and why:
+Each conversation turn passes through a structured loop that now includes explicit conclusion handling and identity reconsolidation defined in the `turn_loop` of the JSON configuration. Here is a high‑level description of what happens and why:
 
 1. **ingest** – Collects the raw user input and any events (e.g. tool results) into a turn object.
 2. **surface_parse** – Performs surface parsing: extracts keywords, intents, and rhetorical signals from the text to build a structured representation.
@@ -83,3 +83,30 @@ Each conversation turn passes through a structured loop of 36 stages defined in 
 36. **recurrence_closure** – Closes the loop and schedules any recurrent processes needed before the next turn.
 
 Each stage is deliberately separated so that the model’s prompts remain small and modular. The aim is not to *train* the model but to orchestrate its reasoning, memory and growth in a transparent and reproducible way.
+
+
+## Identity continuity additions in 4.4.0
+
+SKAi now distinguishes four layers that must not be collapsed into one another:
+
+`event/evidence → memory → conclusion → self-state`.
+
+A conversation can produce evidence without immediately changing identity. A durable
+conclusion records what the agent inferred, why, how confident the inference is, what supports
+it and what contradicts it. If upstream support later changes, an identity-impact scan marks
+affected conclusions and self-state fields for review.
+
+Self-state is deliberately **reconsolidated**, not overwritten. A single surprising episode may
+challenge an invariant, but it does not silently erase a long-lived self-description. Revision
+remains possible when support genuinely changes; previous versions and reasons stay inspectable.
+
+New turn-loop operations:
+
+- `conclusion_recall` — inject only currently supported conclusions;
+- `conclusion_extract` — propose new or revised durable inferences;
+- `identity_impact_scan` — trace downstream effects of changed support;
+- `identity_reconsolidation` — revise self-state conservatively with lineage.
+
+The public kernel still makes no claim that persistence proves consciousness. These mechanisms
+are for preserving an agent's inspectable identity trajectory across context loss, model
+replacement and long-running interaction.
