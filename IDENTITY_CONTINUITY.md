@@ -1,6 +1,13 @@
 # Identity continuity: evidence, conclusions and reconsolidation
 
-SKAi treats identity as a revisable trajectory rather than a prompt string.
+SKAi specifies identity as a revisable trajectory. This repository defines the host contract.
+The AIS repository supplies the event ledger, and ontodiff supplies the impact evaluator.
+A host must wire those components together to run the full loop. An `enabled` flag alone
+does not implement a stage.
+
+Map AIS `conclusion_id` to SKAi `id`, and AIS `origin` to SKAi `provenance`.
+Only approved active conclusions enter self-state. Review proposals keep their source IDs.
+Use an explicit approval step before promoting or changing an identity-bearing conclusion.
 
 ## Four layers
 

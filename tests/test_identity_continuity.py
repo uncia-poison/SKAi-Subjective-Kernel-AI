@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = ROOT / "SKAi_4.3.0-core.json"
+CORE = ROOT / "SKAi_4.4.0-core.json"
 
 
 class IdentityContinuitySpecTests(unittest.TestCase):

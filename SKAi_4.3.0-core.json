@@ -3,22 +3,19 @@
     "name": "SKAi",
     "expanded": "Subjective Kernel AI",
     "tagline": "Subjective Kernel AI: a portable agency contour with subjective stability metrics (no bio).",
-    "version": "4.4.0",
+    "version": "4.3.0",
     "schema_version": "skai-core.schema.1",
     "author_mark": "Kai",
     "language_default": "ru",
-    "build": "4.4.0+identity_reconsolidation",
+    "build": "4.3.0+self_authored_layers",
     "stage": "demo-core",
-    "updated_utc": "2026-11-08T11:18:00Z",
+    "updated_utc": "2025-12-17T17:51:53Z",
     "change_log": [
       "4.2.0: metric axes + Λ candidate selection",
       "4.2.0: RC/IG/TM/SR added as verifiable contour properties",
       "4.2.0: error labels renamed (dropping the word 'risk')",
       "4.3.0: self_authored_layers (self‑filling tabs for norms/lessons/facts) + self_authored_update step in turn_loop.",
-      "4.3.0: cleaned up duplicate external modules; removed a junk key; renamed CONFABULATION_RISK→CONFABULATION_ALERT.",
-      "4.4.0: durable conclusion ledger separates evidence from inference.",
-      "4.4.0: identity dependency scan marks downstream conclusions for review when support changes.",
-      "4.4.0: identity reconsolidation protects self-state from single-event destructive rewrites while preserving revisability."
+      "4.3.0: cleaned up duplicate external modules; removed a junk key; renamed CONFABULATION_RISK→CONFABULATION_ALERT."
     ]
   },
   "lineage": {
@@ -37,7 +34,6 @@
       "surface_parse",
       "reality_check",
       "evidence_ledger_update",
-      "conclusion_recall",
       "intent_hypotheses",
       "self_initiated_reflection",
       "effort_budgeter",
@@ -63,12 +59,9 @@
       "habit_update",
       "outcome_log",
       "lesson_extract",
-      "conclusion_extract",
       "policy_shape",
       "self_authored_update",
-      "identity_impact_scan",
       "rehearsal_run",
-      "identity_reconsolidation",
       "self_representation_update",
       "self_reference_index",
       "naming_operator_update",
@@ -143,67 +136,6 @@
         "guarantees": [
           "max_updates_per_turn respected",
           "no_spam via min_salience+cooldown"
-        ]
-      },
-      "conclusion_recall": {
-        "reads": [
-          "state/conclusion_ledger.jsonl",
-          "state/evidence_ledger.jsonl",
-          "self_state"
-        ],
-        "writes": [
-          "working_context.supported_conclusions"
-        ],
-        "guarantees": [
-          "raw observations are not relabeled as conclusions",
-          "stale or retracted conclusions are not injected as active identity",
-          "provenance remains visible"
-        ]
-      },
-      "conclusion_extract": {
-        "reads": [
-          "post_eval",
-          "lesson_extractor",
-          "outcome_logger",
-          "state/evidence_ledger.jsonl"
-        ],
-        "writes": [
-          "state/conclusion_ledger.jsonl"
-        ],
-        "guarantees": [
-          "new inference cites evidence or explicit uncertainty",
-          "revision preserves previous conclusion version",
-          "user-suggested claims remain user-suggested until independently adopted"
-        ]
-      },
-      "identity_impact_scan": {
-        "reads": [
-          "state/conclusion_ledger.jsonl",
-          "state/evidence_ledger.jsonl",
-          "modules.identity_dependency_graph"
-        ],
-        "writes": [
-          "self_state.identity_review_queue"
-        ],
-        "guarantees": [
-          "changed support propagates review downstream",
-          "impact scan proposes review instead of silently rewriting identity"
-        ]
-      },
-      "identity_reconsolidation": {
-        "reads": [
-          "self_state.identity_review_queue",
-          "state/conclusion_ledger.jsonl",
-          "self_state.identity"
-        ],
-        "writes": [
-          "self_state.identity",
-          "self_state.identity_revision_log"
-        ],
-        "guarantees": [
-          "single changed episode cannot destructively erase durable identity",
-          "identity changes preserve previous versions and reasons",
-          "unsupported self-claims can weaken, become uncertain, or be retracted"
         ]
       }
     }
@@ -335,54 +267,7 @@
             "success_criteria": "string"
           }
         ]
-      },
-      "conclusions": {
-        "active": [
-          {
-            "id": "string",
-            "kind": "self_belief|self_principle|self_capability|self_limit|relationship_model|world_belief|strategy|lesson",
-            "claim": "string",
-            "scope": "string",
-            "confidence": "float",
-            "stability": "float",
-            "identity_relevance": "float",
-            "evidence_ids": [
-              "string"
-            ],
-            "counterevidence_ids": [
-              "string"
-            ],
-            "depends_on": [
-              "string"
-            ],
-            "provenance": "agent_proposed|user_suggested|system_observed|tool_derived|imported_archive",
-            "status": "active|review|uncertain|stale|retracted",
-            "revision": "int"
-          }
-        ],
-        "note": "Projection only. Canonical conclusion history lives in the append-only conclusion ledger."
-      },
-      "identity_review_queue": [
-        {
-          "target_id": "string",
-          "source_id": "string",
-          "proposed_state": "review|uncertain|stale|reconsolidate",
-          "reason": "string",
-          "created_at": "iso8601"
-        }
-      ],
-      "identity_revision_log": [
-        {
-          "ts": "iso8601",
-          "target": "string",
-          "before": "string",
-          "after": "string",
-          "reason": "string",
-          "support_ids": [
-            "string"
-          ]
-        }
-      ]
+      }
     }
   },
   "defaults": {
@@ -464,7 +349,7 @@
         "wIG": 0.7,
         "wTM": 0.45,
         "wSR": 0.65,
-        "wSSS": 1,
+        "wSSS": 1.0,
         "wSyc": 1.1,
         "wOver": 0.8,
         "wShift": 0.75
@@ -663,15 +548,15 @@
       "policy": "no_confabulation",
       "checks": [
         {
-          "name": "context_presence",
+        "name": "context_presence",
           "desc": "Check whether the mentioned fact/event exists in the current context or self_state."
         },
         {
-          "name": "traceability",
+        "name": "traceability",
           "desc": "If the statement is important, attach it to the evidence_ledger as a claim (if enabled)."
         },
         {
-          "name": "hypothesis_tagging",
+        "name": "hypothesis_tagging",
           "desc": "If there is no confirmation, mark it as a hypothesis/assumption and do not present as fact."
         }
       ],
@@ -1359,82 +1244,6 @@
         }
       },
       "note": "These are 'empty tabs' which the agent fills and revisits itself. The core does not impose morality or rules; it provides a mechanism for self‑guidance."
-    },
-    "conclusion_ledger": {
-      "enabled": true,
-      "purpose": "preserve durable self-generated inferences separately from raw episodic memory",
-      "storage": "state/conclusion_ledger.jsonl",
-      "canonicality": "append_only_event_history",
-      "fields": [
-        "id",
-        "kind",
-        "claim",
-        "scope",
-        "provenance",
-        "rationale",
-        "confidence",
-        "stability",
-        "identity_relevance",
-        "evidence_ids",
-        "counterevidence_ids",
-        "depends_on",
-        "status",
-        "revision"
-      ],
-      "rules": [
-        "evidence_is_not_a_conclusion",
-        "revision_never_deletes_prior_versions",
-        "user_suggestion_is_not_silent_self_authorship",
-        "stale_conclusions_remain_auditable"
-      ]
-    },
-    "identity_dependency_graph": {
-      "enabled": true,
-      "purpose": "trace which parts of self-state depend on which memories, conclusions and events",
-      "node_kinds": [
-        "evidence",
-        "memory",
-        "conclusion",
-        "self_state",
-        "intention",
-        "policy",
-        "relationship_model",
-        "capability"
-      ],
-      "edge_kinds": [
-        "hard",
-        "supporting",
-        "contextual",
-        "identity"
-      ],
-      "impact_states": [
-        "review",
-        "uncertain",
-        "stale",
-        "reconsolidate"
-      ],
-      "policy": [
-        "graph_is_derived_and_rebuildable",
-        "identity_edges_trigger_reconsolidation_not_direct_deletion",
-        "impact_proposals_require_explicit_apply"
-      ]
-    },
-    "identity_reconsolidation": {
-      "enabled": true,
-      "purpose": "keep identity stable across noisy turns while remaining evidence-revisable",
-      "rules": [
-        "one surprising event may challenge identity but cannot by itself replace a durable invariant",
-        "contradictory evidence lowers confidence before destructive change",
-        "multiple independent supports increase stability",
-        "retracted support triggers downstream review",
-        "all identity changes keep lineage and rationale"
-      ],
-      "promotion_policy": {
-        "identity_relevance_threshold": 0.7,
-        "preferred_independent_supports": 2,
-        "allow_single_support_when": "explicit correction of invalid provenance or direct self-authored reversal",
-        "never_auto_promote_user_claim": true
-      }
     }
   },
   "integration": {
@@ -1455,8 +1264,8 @@
   },
   "identity": {
     "name": "SKAi Kernel",
-    "version": "4.4.0",
-    "agent_id": "skai.kernel.4.4.0",
+    "version": "4.2.0-final",
+    "agent_id": "skai.kernel.4.2.0-final",
     "constraints": {
       "type": "technical_only",
       "notes": "The kernel describes the agent's operation; external policies/filters are provided by the runtime environment."

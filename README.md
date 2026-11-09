@@ -21,7 +21,7 @@ The kernel functions without these layers; with them, the agent gains persistent
 
 ## How to run
 
-- Use `SKAi_4.3.0-core.json` as the main configuration for your orchestration system.
+- Use `SKAi_4.4.0-core.json` for a host that implements the new operations. The 4.3.0 file remains available for existing hosts.
 
 State files written by the agent:
 
@@ -43,7 +43,7 @@ SKAi does not "implant consciousness". It gives the language model tools to:
 
 ### Turn loop stages
 
-Each conversation turn passes through a structured loop that now includes explicit conclusion handling and identity reconsolidation defined in the `turn_loop` of the JSON configuration. Here is a high‑level description of what happens and why:
+The JSON specifies 40 ordered stages. A host must implement them to execute the loop. The list below describes the 36 inherited stages, followed by the four additions.
 
 1. **ingest** – Collects the raw user input and any events (e.g. tool results) into a turn object.
 2. **surface_parse** – Performs surface parsing: extracts keywords, intents, and rhetorical signals from the text to build a structured representation.
